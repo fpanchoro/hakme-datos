@@ -7,6 +7,7 @@ def num_tokens_from_string(string: str) -> int:
   return num_tokens
 
 def create_dynamic_model(class_name: str, fields_json: dict):
+  import sqlite3
   from langchain.pydantic_v1 import create_model, Field
   fields = {}
   for field_name, field_info in fields_json.items():
