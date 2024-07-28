@@ -1,3 +1,14 @@
+def config_db():
+    from airflow.models import Variable
+    configura = {
+        'dbname': Variable.get("DB_NAME"),
+        'user': Variable.get("DB_USER"),
+        'password': Variable.get("DB_PASSWORD"),
+        'host': Variable.get("DB_HOST"),
+        'port': Variable.get("DB_PORT")
+    }
+    return configura
+
 def sql_consultar(sql_consulta):
   import psycopg2
   from psycopg2 import OperationalError

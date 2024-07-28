@@ -42,4 +42,4 @@ with DAG(
         op_kwargs={"agentName": "resumenSemanal"},
     )
 
-    process_airflow_runtime_parameters >> inicializar_cola_analisis_diario >> procesar_cola_analisis_diario >> inicializar_cola_resumen_semanal >> procesar_cola_resumen_semanal
+    inicializar_cola_analisis_diario >> procesar_cola_analisis_diario >> inicializar_cola_resumen_semanal >> procesar_cola_resumen_semanal

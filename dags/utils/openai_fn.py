@@ -7,7 +7,7 @@ def num_tokens_from_string(string: str) -> int:
   return num_tokens
 
 def create_dynamic_model(class_name: str, fields_json: dict):
-  from langchain.pydantic_v1 import create_model
+  from langchain.pydantic_v1 import create_model, Field
   fields = {}
   for field_name, field_info in fields_json.items():
       field_type = eval(field_info['type'])
