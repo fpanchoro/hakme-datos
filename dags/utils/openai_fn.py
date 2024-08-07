@@ -46,8 +46,11 @@ def openai_procesar(parametros_del_agente, data, modelo_data):
   try:
     chain = create_structured_output_chain(modelo_data, llm, prompt)
     result = chain.run(data['input'])
-
   except OperationalError as e:
     print(f"Error al procesar: {e}")
-
-  return result
+    result = None
+  except:
+    print("Error procesando mensaje. Cancelado.")
+    result = None
+  finally:
+    return result

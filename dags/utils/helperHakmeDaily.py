@@ -28,17 +28,20 @@ def procesar_cola(**kwargs):
 
   if len(df_agentes.index) == 1:
     agente = df_agentes.iloc[0]
-    df_cola = sql_fn.sql_consultar("select pa.* from public.procesamiento_analisis pa where pa.agent_id = " + str(agente["agent_id"]) + " and pa.estado = 'pendiente' order by id_procesamiento_analisis asc")
+    df_cola = sql_fn.sql_consultar("select pa.* from public.procesamiento_analisis pa where pa.agent_id = " + str(agente["agent_id"]) + " and pa.estado = '" + str(kwargs["status"]) + "' order by id_procesamiento_analisis asc")
 
     DynamicModel = None
     DynamicModel = openai_fn.create_dynamic_model(agente["name"], agente["parametros"].get("class"))
     os.environ["OPENAI_API_KEY"] = agente["parametros"].get("agente_id")
 
     for index, cola in df_cola.iterrows():
-      sql_fn.sql_actualizar_estado_procesamiento(cola["id_procesamiento_analisis"], "en procesamiento")
-      r = openai_fn.openai_procesar(agente["parametros"], cola["raw"], DynamicModel)
-      sql_fn.sql_insertar(dict(r), cola["tabla_output"])
-      sql_fn.sql_actualizar_estado_procesamiento(cola["id_procesamiento_analisis"], "procesado")
+        sql_fn.sql_actualizar_estado_procesamiento(cola["id_procesamiento_analisis"], "en procesamiento")
+        r = openai_fn.openai_procesar(agente["parametros"], cola["raw"], DynamicModel)
+        if r is not None:
+          sql_fn.sql_insertar(dict(r), cola["tabla_output"])
+          sql_actualizar_estado_procesamiento(cola["id_procesamiento_analisis"], "procesado")
+        else:
+          sql_actualizar_estado_procesamiento(cola["id_procesamiento_analisis"], "cancelado")
     logging.info(f"[procesar_cola] Terminado agente: {str(kwargs['agentName'])}")
   else:
     logging.info("No se encontró el agente " + str(kwargs["agentName"]) + " o hay más de los esperados")
