@@ -39,9 +39,9 @@ def procesar_cola(**kwargs):
         r = openai_fn.openai_procesar(agente["parametros"], cola["raw"], DynamicModel)
         if r is not None:
           sql_fn.sql_insertar(dict(r), cola["tabla_output"])
-          sql_actualizar_estado_procesamiento(cola["id_procesamiento_analisis"], "procesado")
+          sql_fn.sql_actualizar_estado_procesamiento(cola["id_procesamiento_analisis"], "procesado")
         else:
-          sql_actualizar_estado_procesamiento(cola["id_procesamiento_analisis"], "cancelado")
+          sql_fn.sql_actualizar_estado_procesamiento(cola["id_procesamiento_analisis"], "cancelado")
     logging.info(f"[procesar_cola] Terminado agente: {str(kwargs['agentName'])}")
   else:
     logging.info("No se encontró el agente " + str(kwargs["agentName"]) + " o hay más de los esperados")
